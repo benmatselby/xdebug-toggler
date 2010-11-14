@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<script>
+
+/**
+ * Toggle whether or not xdebug should be auto started or not
+ *
+ * @param {String} event This is the name of the event
+ *
+ * @return void
+ */
+function performCommand(event)
+{
+    if (event.command === "toggle") {
+        if (event.target.badge === 0) {
+            event.target.badge = 1;
+            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("setCookie", 60*24);
+        } else {
+            event.target.badge = 0;
+            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("setCookie", -1);
+        }
+    }
+}
+/**
+ * Message handle, decide which functions to call depending on
+ * the message that has been sent
+ *
+ * @param {String} event The name of the event
+ *
+ * @return void
+ */
+function handleMessage(event)
+{
+    switch (event.name) {
+        case "isEnabled" :
+            var enabled = false;
+            var itemArray = safari.extension.toolbarItems;
+            for (var i = 0; i < itemArray.length; ++i) {
+                var item = itemArray[i];
+                if (item.label == "Xdebug") {
+                    enabled = item.badge;
+                    break;
+                }
+            }
+            if (event.target.page) {
+                event.target.page.dispatchMessage("isEnabled", enabled);
+            }
+            break;
+    }
+}
+
+// Register the handlers with the application
+safari.application.addEventListener("command", performCommand, false);
+safari.application.addEventListener("message", handleMessage, false);
+
+</script>
