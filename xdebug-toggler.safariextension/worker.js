@@ -1,22 +1,26 @@
 /**
  * Set the cookie value according to the minutes passed in
  *
- * @param {Int} minutes The number of minutes to persist the cookie
+ * @param {Object} data The number data object that stores parameters
  *
  * @return void
  */
-function setCookie(minutes)
+function setCookie(data)
 {
-    var expiry=new Date();
+    var expiry = new Date();
+    var minutes = -1;
+    if (data.enabled == 1) {
+        minutes = 24*60;
+    }
     expiry.setTime(expiry.getTime() + (minutes*60*1000));
-    document.cookie="XDEBUG_SESSION=1; expires="+expiry.toUTCString()+"; path=/";
+    document.cookie="XDEBUG_SESSION=" + data.idekey + "; expires="+expiry.toUTCString()+"; path=/";
 }
 
 /**
  * Message handle, decide which functions to call depending on
  * the message that has been sent
  *
- * @param {String} event The name of the event
+ * @param {SafariExtensionMessageEvent} event The name of the event
  *
  * @return void
  */
@@ -28,11 +32,8 @@ function handleMessage(event)
             break;
 
         case "isEnabled" :
-            if (event.message == 1) {
-                setCookie(60*24);
-            } else {
-                setCookie(-1);
-            }
+            var data = event.message;
+            setCookie(data);
             break;
     }
 }
