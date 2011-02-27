@@ -14,11 +14,11 @@ function performCommand(event)
         if (event.target.badge === 0) {
             // Set debugger to on
             event.target.badge = 1;
-            toggleCookie();
+            toggleCookie(1);
         } else {
             // Set debugger to off
             event.target.badge = 0;
-            toggleCookie();
+            toggleCookie(0);
         }
     }
 }
@@ -56,7 +56,8 @@ function isEnabled()
     var itemArray = safari.extension.toolbarItems;
     for (var i = 0; i < itemArray.length; ++i) {
         var item = itemArray[i];
-        if (item.label == "Xdebug") {
+        if (item.label == "Xdebug" &&
+            item.browserWindow.activeTab.url == safari.application.activeBrowserWindow.activeTab.url) {
             enabled = item.badge;
             break;
         }
@@ -67,12 +68,18 @@ function isEnabled()
 /**
  * Toggle the cookie so we get the new idekey if it changes
  *
+ * @param {Boolean} enableOverride Are we wanting to override the check of whether or not debugging is on
+ *
  * @return void
  */
-function toggleCookie()
+function toggleCookie(enableOverride)
 {
     var data = new Object;
-    data.enabled = isEnabled();
+    if (enableOverride == null) {
+        data.enabled = isEnabled();
+    } else {
+        data.enabled = enableOverride;
+    }
     data.idekey = safari.extension.settings.idekey
     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("setCookie", data);
 }
