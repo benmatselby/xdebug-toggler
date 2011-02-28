@@ -1,3 +1,9 @@
+Xdebug Toggler 1.2
+==================
+
+* Fixes #1 https://github.com/benmatselby/xdebug-toggler/issues/closed#issue/1
+
+
 Xdebug Toggler 1.1
 ==================
 
