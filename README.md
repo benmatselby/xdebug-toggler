@@ -3,8 +3,6 @@ Xdebug Toggler Readme
 
 Xdebug Toggler is a Safari extension which allows you to auto start Xdebug debugging with the click of a button
 
-The full blog post explaining how to use it can be found [here](http://www.soulbroken.co.uk/blog/2010/11/xdebug-toggler-for-safari/)
-
 
 Installation
 ------------
